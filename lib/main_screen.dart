@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sihproject/info_screen.dart';
 import 'package:sihproject/menu_screen.dart';
+import 'package:sihproject/renting_screen.dart';
 
 
 int battery;
@@ -181,7 +182,7 @@ class _MainScreenState extends State<MainScreen> {
                             );
                           }
                           var myBattery = event.data.snapshot.value['battery'];
-                          return InfoScreen(myBattery);
+                          return InfoScreen(battery: myBattery,);
                         },
                       ),
                     ),
@@ -198,7 +199,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     color: Color(0xff262626),
                     onPressed: (){
-                     print('ok');
+                     Navigator.push(context, MaterialPageRoute(builder: (context)=> RentingScreen() ));
                     },
                   ),
                 ),
