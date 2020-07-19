@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sihproject/info_screen.dart';
+import 'package:sihproject/menu_screen.dart';
 
-//final dataBaseReference = FirebaseDatabase.instance.reference();
 
 int battery;
 
@@ -19,6 +20,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   double myLat;
   double myLong;
   List<Marker> markers = [];
@@ -98,12 +100,14 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.grey[50],
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.navigation),
         onPressed: navigate,
         backgroundColor: Colors.green,
       ),
+      drawer: Container(child: MenuScreen(), width: 250,),
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -121,17 +125,17 @@ class _MainScreenState extends State<MainScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 10.0),
               child: MaterialButton(
-                padding: EdgeInsets.only(top: 2.0, left: 1.0),
-                height: 50.0,
-                minWidth: 50.0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)
-                ),
-                color: Colors.white,
-                child: Icon(Icons.menu, color: Colors.black87,),
-                onPressed: (){
-                  print('menu');
-                },
-              ),
+                      padding: EdgeInsets.only(top: 2.0, left: 1.0),
+                      height: 40.0,
+                      minWidth: 40.0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)
+                      ),
+                      color: Colors.white,
+                      child: Icon(Icons.menu, color: Colors.black87,),
+                      onPressed: (){
+                       _scaffoldKey.currentState.openDrawer();
+                      }
+                  ),
             )
           ],
         ),
@@ -145,23 +149,6 @@ class _MainScreenState extends State<MainScreen> {
         .animateCamera(CameraUpdate.newCameraPosition(_finalCameraPosition));
   }
 
-  void _showAlert() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Text('testing'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('ok'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-          );
-        });
-  }
 
   void myBottomSheet(var reference) {
     showModalBottomSheet(
@@ -188,7 +175,10 @@ class _MainScreenState extends State<MainScreen> {
                         builder: (context, AsyncSnapshot<Event> event) {
                           // 26.909304 , 80.9757538
                           if (!event.hasData) {
-                            return Container(child: CircularProgressIndicator());
+                            return SpinKitChasingDots(
+                              size: 20,
+                              color: Colors.blue,
+                            );
                           }
                           var myBattery = event.data.snapshot.value['battery'];
                           return InfoScreen(myBattery);
