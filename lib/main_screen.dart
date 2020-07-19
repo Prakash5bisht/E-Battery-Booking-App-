@@ -125,13 +125,13 @@ class _MainScreenState extends State<MainScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 10.0),
               child: MaterialButton(
-                      padding: EdgeInsets.only(top: 2.0, left: 1.0),
+                      padding: EdgeInsets.only(top: 1.0, left: 0.8),
                       height: 40.0,
                       minWidth: 40.0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)
                       ),
-                      color: Colors.white,
-                      child: Icon(Icons.menu, color: Colors.black87,),
+                      color: Color(0xff262626),
+                      child: Icon(Icons.menu, color: Colors.white,),
                       onPressed: (){
                        _scaffoldKey.currentState.openDrawer();
                       }
