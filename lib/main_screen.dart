@@ -118,6 +118,21 @@ class _MainScreenState extends State<MainScreen> {
               mapToolbarEnabled: false,
               markers: Set.from(markers),
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0, left: 10.0),
+              child: MaterialButton(
+                padding: EdgeInsets.only(top: 2.0, left: 1.0),
+                height: 50.0,
+                minWidth: 50.0,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)
+                ),
+                color: Colors.white,
+                child: Icon(Icons.menu, color: Colors.black87,),
+                onPressed: (){
+                  print('menu');
+                },
+              ),
+            )
           ],
         ),
       ),
@@ -173,7 +188,7 @@ class _MainScreenState extends State<MainScreen> {
                         builder: (context, AsyncSnapshot<Event> event) {
                           // 26.909304 , 80.9757538
                           if (!event.hasData) {
-                            return CircularProgressIndicator();
+                            return Container(child: CircularProgressIndicator());
                           }
                           var myBattery = event.data.snapshot.value['battery'];
                           return InfoScreen(myBattery);
@@ -193,7 +208,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     color: Color(0xff262626),
                     onPressed: (){
-                      Navigator.of(context).pop();
+                     print('ok');
                     },
                   ),
                 ),
