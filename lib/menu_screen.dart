@@ -14,7 +14,7 @@ class MenuScreen extends StatelessWidget {
                   children: <Widget>[
                     Icon(
                       Icons.supervised_user_circle,
-                      color: Colors.grey,
+                      color: Colors.blueGrey,
                       size: 50.0,
                     ),
                     SizedBox(height: 5.0,),

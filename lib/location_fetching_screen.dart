@@ -36,10 +36,11 @@ class _LocationFetchingScreenState extends State<LocationFetchingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SpinKitDoubleBounce(
-              color: Colors.green,
-              size: 50.0,
+            SpinKitChasingDots(
+              color: Colors.blue,
+              size: 30.0,
             ),
+            SizedBox(height: 20.0,),
             Text('Getting your location...',
             style: TextStyle(
               fontSize: 20.0,

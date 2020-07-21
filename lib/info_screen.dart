@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class InfoScreen extends StatefulWidget{
-  InfoScreen({this.battery});
+  InfoScreen({this.battery,this.batteryStatus});
   final  battery;
-
+  final batteryStatus;
   @override
   _InfoScreenState createState() => _InfoScreenState();
 }
@@ -41,7 +41,7 @@ class _InfoScreenState extends State<InfoScreen> with SingleTickerProviderStateM
               ],
             ),
             decoration: BoxDecoration(
-              color:  Colors.green, //widget.battery<=20 ? Colors.red :
+              color: widget.battery<=20 ? Colors.red : Colors.green,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10.0),
                   topRight: Radius.circular(10.0)),
@@ -71,7 +71,7 @@ class _InfoScreenState extends State<InfoScreen> with SingleTickerProviderStateM
                  elevation: 0,
                  child: Center(
                    child: Text(
-                       'charging',
+                     '${widget.batteryStatus}',
                      style: TextStyle(
                          fontWeight: FontWeight.w500,
                          fontSize: 20.0,
@@ -83,8 +83,7 @@ class _InfoScreenState extends State<InfoScreen> with SingleTickerProviderStateM
              ],
            ),
          ),
-       )
-       // Expanded(flex: 2 ,child: Text('${widget.battery}')),
+       ),
       ],
     );
   }

@@ -24,6 +24,7 @@ class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   double myLat;
   double myLong;
+  var checkBattery = 49;
   List<Marker> markers = [];
 
   var location;
@@ -174,7 +175,7 @@ class _MainScreenState extends State<MainScreen> {
                       child: StreamBuilder(
                         stream: reference.onValue,
                         builder: (context, AsyncSnapshot<Event> event) {
-                          // 26.909304 , 80.9757538
+
                           if (!event.hasData) {
                             return SpinKitChasingDots(
                               size: 20,
@@ -182,14 +183,15 @@ class _MainScreenState extends State<MainScreen> {
                             );
                           }
                           var myBattery = event.data.snapshot.value['battery'];
-                          return InfoScreen(battery: myBattery,);
+                          var myBatteryStatus = event.data.snapshot.value['status'];
+                          return InfoScreen(battery: myBattery, batteryStatus: myBatteryStatus,);
                         },
                       ),
                     ),
                   ),
                 ),
-              SizedBox(height: 4.0,),
-                Expanded(
+                SizedBox(height: 4.0,),
+                 Expanded(
                   child: MaterialButton(
                     height: 10.0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
