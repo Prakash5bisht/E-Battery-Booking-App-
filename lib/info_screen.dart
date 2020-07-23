@@ -41,10 +41,12 @@ class _InfoScreenState extends State<InfoScreen> with SingleTickerProviderStateM
               ],
             ),
             decoration: BoxDecoration(
-              color: widget.battery<=20 ? Colors.red : Colors.green,
+              color: widget.battery < 20 ? Colors.red :
+              widget.battery >= 20 && widget.battery < 50 ? Colors.orangeAccent : Colors.green,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10.0),
-                  topRight: Radius.circular(10.0)),
+                  topRight: Radius.circular(10.0),
+              ),
             ),
           ),
         ),

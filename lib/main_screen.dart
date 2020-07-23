@@ -5,10 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:sihproject/info_screen.dart';
 import 'package:sihproject/menu_screen.dart';
+import 'package:sihproject/models/saved_info.dart';
 import 'package:sihproject/renting_screen.dart';
-
 
 int battery;
 
@@ -35,7 +36,6 @@ class _MainScreenState extends State<MainScreen> {
     myLat = widget.latitude;
     myLong = widget.longitude;
     setLocation();
-    // getData();
     setMarkers();
   }
 
@@ -43,38 +43,42 @@ class _MainScreenState extends State<MainScreen> {
   CameraPosition _initialCameraPosition;
 
   void setMarkers() {
-    List<dynamic> list = [];
-    Map<dynamic, dynamic> values = {};
+    Map<dynamic, dynamic> modules;
 
     FirebaseDatabase.instance
         .reference()
         .child('modules')
         .once()
         .then((DataSnapshot snapshot) {
-      list = snapshot.value;
-      print(list[1]);
+
+      modules = snapshot.value;
 
       setState(() {
-        for (int i = 1; i < list.length; i++) {
-          values = list[i];
 
-          markers.add(Marker(
-              markerId: MarkerId(i.toString()),
-              draggable: false,
-              position: LatLng(values['location'][0], values['location'][1]),
-              infoWindow: InfoWindow(
-                title: i.toString(),
-              ),
-              onTap: () {
-                myBottomSheet(FirebaseDatabase.instance
-                    .reference()
-                    .child('modules')
-                    .child(i.toString()));
-              }));
+        try{
+          modules.entries.forEach((element) {
+
+            markers.add(Marker(
+                markerId: MarkerId(element.key),
+                draggable: false,
+                position: LatLng(element.value['location'][0], element.value['location'][1]),//values['location'][0], values['location'][1]
+                infoWindow: InfoWindow(
+                  title: element.key,
+                ),
+                onTap: () {
+                  myBottomSheet(FirebaseDatabase.instance
+                      .reference()
+                      .child('modules')
+                      .child(element.key));
+                }));
+
+          });
+        }catch(e){
+          print(e);
         }
+
       });
     });
-
   }
 
   void setLocation() {
@@ -83,16 +87,6 @@ class _MainScreenState extends State<MainScreen> {
       zoom: 13.0,
     );
   }
-
-//void getData() {
-//  FirebaseDatabase.instance.reference().child('1').onValue.listen((event){
-//     _snapshot = event.snapshot;
-//
-//   });
-
-//   battery = _snapshot.value['battery'];
-//   location = _snapshot.value['location'];
-//}
 
   static final CameraPosition _finalCameraPosition = CameraPosition(
     target: LatLng(26.8103905, 80.8751125),
@@ -109,7 +103,10 @@ class _MainScreenState extends State<MainScreen> {
         onPressed: navigate,
         backgroundColor: Colors.green,
       ),
-      drawer: Container(child: MenuScreen(), width: 250,),
+      drawer: Container(
+        child: MenuScreen(),
+        width: 250,
+      ),
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -127,17 +124,19 @@ class _MainScreenState extends State<MainScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 10.0),
               child: MaterialButton(
-                      padding: EdgeInsets.only(top: 1.0, left: 0.8),
-                      height: 40.0,
-                      minWidth: 40.0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)
-                      ),
-                      color: Color(0xff262626),
-                      child: Icon(Icons.menu, color: Colors.white,),
-                      onPressed: (){
-                       _scaffoldKey.currentState.openDrawer();
-                      }
+                  padding: EdgeInsets.only(top: 1.0, left: 0.8),
+                  height: 40.0,
+                  minWidth: 40.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50.0)),
+                  color: Color(0xff262626),
+                  child: Icon(
+                    Icons.menu,
+                    color: Colors.white,
                   ),
+                  onPressed: () {
+                    _scaffoldKey.currentState.openDrawer();
+                  }),
             )
           ],
         ),
@@ -150,7 +149,6 @@ class _MainScreenState extends State<MainScreen> {
     controller
         .animateCamera(CameraUpdate.newCameraPosition(_finalCameraPosition));
   }
-
 
   void myBottomSheet(var reference) {
     showModalBottomSheet(
@@ -167,15 +165,14 @@ class _MainScreenState extends State<MainScreen> {
                   child: Container(
                     height: 200.0,
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 12.0),
                       child: StreamBuilder(
                         stream: reference.onValue,
                         builder: (context, AsyncSnapshot<Event> event) {
-
                           if (!event.hasData) {
                             return SpinKitChasingDots(
                               size: 20,
@@ -183,39 +180,57 @@ class _MainScreenState extends State<MainScreen> {
                             );
                           }
                           var myBattery = event.data.snapshot.value['battery'];
-                          var myBatteryStatus = event.data.snapshot.value['status'];
-                          return InfoScreen(battery: myBattery, batteryStatus: myBatteryStatus,);
+                          Provider.of<SavedInfo>(context)
+                              .savedBatteryPercentage = myBattery;
+                          var myBatteryStatus =
+                              event.data.snapshot.value['status'];
+                          return InfoScreen(
+                            battery: myBattery,
+                            batteryStatus: myBatteryStatus,
+                          );
                         },
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 4.0,),
-                 Expanded(
-                  child: MaterialButton(
-                    height: 10.0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                    child: Text(
-                      'Rent',
-                    style: TextStyle(color: Colors.white),
-                    ),
-                    color: Color(0xff262626),
-                    onPressed: (){
-                     Navigator.push(context, MaterialPageRoute(builder: (context)=> RentingScreen() ));
-                    },
-                  ),
+                SizedBox(
+                  height: 4.0,
                 ),
-                SizedBox(height: 4.0,),
+              Provider.of<SavedInfo>(context).savedBatteryPercentage == null ||
+                Provider.of<SavedInfo>(context).savedBatteryPercentage < 20
+                    ? Container()
+                    : Expanded(
+                        child: MaterialButton(
+                          height: 10.0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          child: Text(
+                            'Rent',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Color(0xff262626),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RentingScreen()));
+                          },
+                        ),
+                      ),
+                SizedBox(
+                  height: 4.0,
+                ),
                 Expanded(
                   child: MaterialButton(
                     height: 10.0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
                     child: Text(
                       'Ok',
                       style: TextStyle(color: Colors.white),
                     ),
                     color: Color(0xff262626),
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.of(context).pop();
                     },
                   ),
@@ -226,5 +241,3 @@ class _MainScreenState extends State<MainScreen> {
         });
   }
 }
-
-
