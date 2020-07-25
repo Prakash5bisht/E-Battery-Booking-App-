@@ -3,16 +3,13 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:sihproject/info_screen.dart';
 import 'package:sihproject/menu_screen.dart';
+import 'package:sihproject/models/bottom_sheet_screen.dart';
 import 'package:sihproject/models/saved_info.dart';
-import 'package:sihproject/renting_screen.dart';
 
 int battery;
-
 class MainScreen extends StatefulWidget {
   MainScreen(this.latitude, this.longitude);
   final double latitude;
@@ -25,9 +22,7 @@ class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   double myLat;
   double myLong;
-  var checkBattery = 49;
   List<Marker> markers = [];
-
   var location;
 
   @override
@@ -36,13 +31,15 @@ class _MainScreenState extends State<MainScreen> {
     myLat = widget.latitude;
     myLong = widget.longitude;
     setLocation();
-    setMarkers();
+    Provider.of<SavedInfo>(context, listen: false).getBitmap();
+    addMarkers();
   }
 
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _initialCameraPosition;
 
-  void setMarkers() {
+  void addMarkers() {
+
     Map<dynamic, dynamic> modules;
 
     FirebaseDatabase.instance
@@ -57,19 +54,21 @@ class _MainScreenState extends State<MainScreen> {
 
         try{
           modules.entries.forEach((element) {
-
             markers.add(Marker(
                 markerId: MarkerId(element.key),
+                icon: Provider.of<SavedInfo>(context,listen: false).customMarker,
                 draggable: false,
                 position: LatLng(element.value['location'][0], element.value['location'][1]),//values['location'][0], values['location'][1]
                 infoWindow: InfoWindow(
                   title: element.key,
                 ),
                 onTap: () {
-                  myBottomSheet(FirebaseDatabase.instance
+                  CustomBottomSheet().myBottomSheet(reference: FirebaseDatabase.instance
                       .reference()
                       .child('modules')
-                      .child(element.key));
+                      .child(element.key),
+                  context: context
+                  );
                 }));
 
           });
@@ -79,6 +78,7 @@ class _MainScreenState extends State<MainScreen> {
 
       });
     });
+
   }
 
   void setLocation() {
@@ -144,100 +144,10 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Future<void> navigate() async {
+  void navigate() async {
     final GoogleMapController controller = await _controller.future;
     controller
         .animateCamera(CameraUpdate.newCameraPosition(_finalCameraPosition));
   }
 
-  void myBottomSheet(var reference) {
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.transparent,
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    height: 200.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: StreamBuilder(
-                        stream: reference.onValue,
-                        builder: (context, AsyncSnapshot<Event> event) {
-                          if (!event.hasData) {
-                            return SpinKitChasingDots(
-                              size: 20,
-                              color: Colors.blue,
-                            );
-                          }
-                          var myBattery = event.data.snapshot.value['battery'];
-                          Provider.of<SavedInfo>(context)
-                              .savedBatteryPercentage = myBattery;
-                          var myBatteryStatus =
-                              event.data.snapshot.value['status'];
-                          return InfoScreen(
-                            battery: myBattery,
-                            batteryStatus: myBatteryStatus,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 4.0,
-                ),
-              Provider.of<SavedInfo>(context).savedBatteryPercentage == null ||
-                Provider.of<SavedInfo>(context).savedBatteryPercentage < 20
-                    ? Container()
-                    : Expanded(
-                        child: MaterialButton(
-                          height: 10.0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Text(
-                            'Rent',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          color: Color(0xff262626),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RentingScreen()));
-                          },
-                        ),
-                      ),
-                SizedBox(
-                  height: 4.0,
-                ),
-                Expanded(
-                  child: MaterialButton(
-                    height: 10.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
-                    child: Text(
-                      'Ok',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    color: Color(0xff262626),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
 }
