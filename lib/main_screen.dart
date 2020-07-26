@@ -23,6 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   double myLat;
   double myLong;
   List<Marker> markers = [];
+  List<Polyline> polyLines = [];
   var location;
 
   @override
@@ -33,10 +34,23 @@ class _MainScreenState extends State<MainScreen> {
     setLocation();
     Provider.of<SavedInfo>(context, listen: false).getBitmap();
     addMarkers();
+    addPolylines();
   }
 
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _initialCameraPosition;
+
+  void addPolylines(){
+    setState(() {
+      polyLines.add(
+        Polyline(
+          polylineId: PolylineId('pl'),
+          color: Colors.green,
+          points: []
+        )
+      );
+    });
+  }
 
   void addMarkers() {
 
@@ -120,6 +134,7 @@ class _MainScreenState extends State<MainScreen> {
               zoomControlsEnabled: false,
               mapToolbarEnabled: false,
               markers: Set.from(markers),
+
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 10.0),

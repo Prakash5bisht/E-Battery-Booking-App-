@@ -5,7 +5,6 @@ import 'package:sihproject/main_screen.dart';
 
 import 'main_screen.dart';
 
-
 class LocationFetchingScreen extends StatefulWidget {
   @override
   _LocationFetchingScreenState createState() => _LocationFetchingScreenState();
