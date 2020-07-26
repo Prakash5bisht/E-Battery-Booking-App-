@@ -5,6 +5,7 @@ import 'package:sihproject/main_screen.dart';
 
 import 'main_screen.dart';
 
+/// This is where the user's current location is fetched.It is a stateful widget which means its state can change
 class LocationFetchingScreen extends StatefulWidget {
   @override
   _LocationFetchingScreenState createState() => _LocationFetchingScreenState();
@@ -13,24 +14,22 @@ class LocationFetchingScreen extends StatefulWidget {
 class _LocationFetchingScreenState extends State<LocationFetchingScreen> {
 
   @override
-  void initState() {
+  void initState() { /// whenever the state object of this class is created this method is called first
     super.initState();
     getCurrentLocation();
   }
 
-
-
-  void getCurrentLocation() async{
-    Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  void getCurrentLocation() async{  /// this method calculates the current position of user
+    Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high); /// position is calculated using the geolocator package(see pubspec.yaml)
    double longitude = position.longitude;
    double latitude = position.latitude;
-   print(latitude);
-   print(longitude);
+   /// once done the user is automatically navigated to the next screen which is the main screen
    Navigator.push(context, MaterialPageRoute(builder: (context){
      return MainScreen(latitude, longitude);
    }));
   }
 
+  /// while all location fetching process happens behind, we show user the following
   @override
   Widget build(BuildContext context) {
     return Scaffold(

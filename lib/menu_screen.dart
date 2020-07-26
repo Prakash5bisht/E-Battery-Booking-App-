@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// this screen is shown when the menu button in main_screen is pressed
 class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
+      child: Column( /// the widgets in this screen are laid in top-down manner using column
         children: <Widget>[
           Center(
             child: Container(
@@ -12,7 +13,7 @@ class MenuScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 50.0),
                 child: Column(
                   children: <Widget>[
-                    Icon(
+                    Icon( /// adds user profile icon
                       Icons.supervised_user_circle,
                       color: Colors.blueGrey,
                       size: 50.0,
@@ -32,7 +33,7 @@ class MenuScreen extends StatelessWidget {
             ),
           ),
           ListTile(
-
+         // TODO
           )
         ],
       ),
