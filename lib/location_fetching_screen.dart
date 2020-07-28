@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:imei_plugin/imei_plugin.dart';
 import 'package:sihproject/main_screen.dart';
 
 import 'main_screen.dart';
@@ -13,6 +14,9 @@ class LocationFetchingScreen extends StatefulWidget {
 
 class _LocationFetchingScreenState extends State<LocationFetchingScreen> {
 
+  String _platformImei;
+  String uniqueId;
+
   @override
   void initState() { /// whenever the state object of this class is created this method is called first
     super.initState();
@@ -23,10 +27,35 @@ class _LocationFetchingScreenState extends State<LocationFetchingScreen> {
     Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high); /// position is calculated using the geolocator package(see pubspec.yaml)
    double longitude = position.longitude;
    double latitude = position.latitude;
+    initPlatformState(latitude, longitude);
    /// once done the user is automatically navigated to the next screen which is the main screen
-   Navigator.push(context, MaterialPageRoute(builder: (context){
-     return MainScreen(latitude, longitude);
+//   Navigator.push(context, MaterialPageRoute(builder: (context){
+//     return MainScreen(latitude, longitude);
+//   }));
+  }
+
+
+  void initPlatformState(double lat, double long) async{
+    String platformImei;
+    String idUnique;
+    try{
+      platformImei = await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
+      List<String> multiImei = await ImeiPlugin.getImeiMulti();
+      idUnique = await ImeiPlugin.getId();
+    }catch(e){
+      print(e);
+    }
+
+    if(!mounted) return;
+
+    setState(() {
+      _platformImei = platformImei;
+      uniqueId = idUnique;
+         Navigator.push(context, MaterialPageRoute(builder: (context){
+     return MainScreen(latitude: lat, longitude: long,);
    }));
+    });
+
   }
 
   /// while all location fetching process happens behind, we show user the following

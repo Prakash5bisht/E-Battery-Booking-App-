@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sihproject/location_fetching_screen.dart';
 import 'package:sihproject/models/saved_info.dart';
+import 'package:sihproject/user_signin_signup_modules/Screens/Welcome/welcome_screen.dart';
 
 
 void main() {

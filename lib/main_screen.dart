@@ -13,7 +13,7 @@ import 'package:sihproject/models/saved_info.dart';
 
 /// this is where user is taken after location_fetching_screen when app starts
 class MainScreen extends StatefulWidget {
-  MainScreen(this.latitude, this.longitude); /// the constructor(parameterised) of this class is called with
+  MainScreen({this.latitude, this.longitude}); /// the constructor(parameterised) of this class is called with
   /// latitude and longitude as arguments
   final double latitude;
   final double longitude;
