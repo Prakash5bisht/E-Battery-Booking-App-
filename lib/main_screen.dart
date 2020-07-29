@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:sihproject/menu_screen.dart';
+import 'file:///C:/Users/uday%20G/AndroidStudioProjects/sih_project/lib/menu_screen/menu_screen.dart';
 import 'package:sihproject/models/bottom_sheet_screen.dart';
 import 'package:sihproject/models/saved_info.dart';
 
@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
     myLat = widget.latitude;
     myLong = widget.longitude;
     setLocation();
-    Provider.of<SavedInfo>(context, listen: false).getBitmap();/// ths calls the getBitmap function of SavedInfo class
+    /// ths calls the getBitmap function of SavedInfo class
     addMarkers();
    // addPolylines();
   }

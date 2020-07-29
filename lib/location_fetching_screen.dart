@@ -1,10 +1,14 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:imei_plugin/imei_plugin.dart';
+import 'package:provider/provider.dart';
 import 'package:sihproject/main_screen.dart';
+import 'package:sihproject/models/saved_info.dart';
 
 import 'main_screen.dart';
+import 'user_signin_signup_modules/Screens/welcome_screen.dart';
 
 /// This is where the user's current location is fetched.It is a stateful widget which means its state can change
 class LocationFetchingScreen extends StatefulWidget {
@@ -14,8 +18,7 @@ class LocationFetchingScreen extends StatefulWidget {
 
 class _LocationFetchingScreenState extends State<LocationFetchingScreen> {
 
-  String _platformImei;
-  String uniqueId;
+ // String _platformImei;
 
   @override
   void initState() { /// whenever the state object of this class is created this method is called first
@@ -27,34 +30,64 @@ class _LocationFetchingScreenState extends State<LocationFetchingScreen> {
     Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high); /// position is calculated using the geolocator package(see pubspec.yaml)
    double longitude = position.longitude;
    double latitude = position.latitude;
+    Provider.of<SavedInfo>(context, listen: false).getBitmap();
     initPlatformState(latitude, longitude);
-   /// once done the user is automatically navigated to the next screen which is the main screen
-//   Navigator.push(context, MaterialPageRoute(builder: (context){
-//     return MainScreen(latitude, longitude);
-//   }));
   }
 
 
   void initPlatformState(double lat, double long) async{
     String platformImei;
-    String idUnique;
     try{
       platformImei = await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
-      List<String> multiImei = await ImeiPlugin.getImeiMulti();
-      idUnique = await ImeiPlugin.getId();
+
+      Map<dynamic,dynamic> userSnapshot;
+      FirebaseDatabase.instance.reference().child('user').once().then((DataSnapshot snapshot){
+        userSnapshot = snapshot.value;
+
+        if(userSnapshot != null){
+          if(userSnapshot.containsKey(platformImei)){
+            FirebaseDatabase.instance.reference().child('user').child('$platformImei').once().then((DataSnapshot snap){
+              if(snap.value['loggedIn'] == true){
+                setState(() {
+                  Provider.of<SavedInfo>(context, listen: false).setUser(snap.value['email']);
+                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return MainScreen(latitude: lat, longitude: long,);
+                  }));
+                });
+              }
+              else{
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+                  return WelcomeScreen(uID: platformImei ,latitude: lat, longitude: long,);
+                }));
+              }
+            });
+
+          }
+          else{
+            Navigator.push(context, MaterialPageRoute(builder: (context){
+              return WelcomeScreen(uID: platformImei ,latitude: lat, longitude: long,);
+            }));
+          }
+        }
+        else{
+          Navigator.push(context, MaterialPageRoute(builder: (context){
+            return WelcomeScreen(uID: platformImei,latitude: lat, longitude: long,);
+          }));
+        }
+      });
+
     }catch(e){
       print(e);
     }
 
     if(!mounted) return;
-
-    setState(() {
-      _platformImei = platformImei;
-      uniqueId = idUnique;
-         Navigator.push(context, MaterialPageRoute(builder: (context){
-     return MainScreen(latitude: lat, longitude: long,);
-   }));
-    });
+//
+//    setState(() {
+//      _platformImei = platformImei;
+//         Navigator.push(context, MaterialPageRoute(builder: (context){
+//     return MainScreen(latitude: lat, longitude: long,);
+//   }));
+//    });
 
   }
 
