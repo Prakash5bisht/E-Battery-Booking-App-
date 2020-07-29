@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../models/saved_info.dart';
+import 'package:sihproject/menu_screen_module//reusable_list_tile.dart';
+import 'package:sihproject/models/saved_info.dart';
 
 /// this screen is shown when the menu button in main_screen is pressed
 class MenuScreen extends StatelessWidget {
@@ -19,13 +19,13 @@ class MenuScreen extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       Icon( /// adds user profile icon
-                        Icons.supervised_user_circle,
+                        Icons.person_pin,
                         color: Colors.blueGrey,
                         size: 50.0,
                       ),
                       SizedBox(height: 5.0,),
                       Text(
-                        Provider.of<SavedInfo>(context,listen: false).getUser(),
+                      Provider.of<SavedInfo>(context,listen: false).getUser(),
                         style: TextStyle(
                           color: Color(0xff404040),
                           fontWeight: FontWeight.w500,
@@ -39,22 +39,13 @@ class MenuScreen extends StatelessWidget {
             ),
             SizedBox(height: 3.0,),
             Container(
-              padding: EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(17.0),
               child: Column(
                 children: <Widget>[
-                  ListTile(
-                    leading: Icon(Icons.verified_user, color: Colors.green,),
-                    title: Center(child: Text('profile')),
-                    trailing: IconButton(
-                      icon: Icon(
-                        Icons.chevron_right,
-                        color: Colors.grey,
-                      ),
-                      onPressed: (){
-                        print('user');
-                      },
-                    ),
-                  ),
+                  ReusableListTile(icon: Icons.verified_user, iconColor: Colors.green, title: 'Profile', onPressed: (){ print('profile');},),
+                  ReusableListTile(icon: Icons.feedback, iconColor: Colors.blue, title: 'Feedback', onPressed: (){ print('feedback');},),
+                  ReusableListTile(icon: Icons.exit_to_app, iconColor: Colors.grey, title: 'Log Out', onPressed: (){ print('logout');},),
+                  ReusableListTile(icon: Icons.info_outline, iconColor: Colors.deepOrangeAccent, title: 'About', onPressed: (){ print('about');},),
                 ],
               ),
             )

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'file:///C:/Users/uday%20G/AndroidStudioProjects/sih_project/lib/menu_screen/menu_screen.dart';
+import 'menu_screen_module//menu_screen.dart';
 import 'package:sihproject/models/bottom_sheet_screen.dart';
 import 'package:sihproject/models/saved_info.dart';
 
