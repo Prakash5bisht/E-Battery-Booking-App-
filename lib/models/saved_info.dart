@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +10,8 @@ class SavedInfo extends ChangeNotifier{
   BitmapDescriptor customMarker;
   double latitude;
   double longitude;
-  String _user;
+  String _userName;
+  String _userId;
 
   void getBitmap(){
     /// this function calls convertPngToBitmap function and then store it to customMarker variable
@@ -27,11 +29,22 @@ class SavedInfo extends ChangeNotifier{
   }
 
   String getUser(){
-    return _user;
+    return _userName;
   }
 
   void setUser(String email){
-     _user = email;
+     _userName = email;
+  }
+
+  void setUserId(String id){
+    _userId = id;
+  }
+
+  bool signOutUser(){
+    FirebaseDatabase.instance.reference().child('user').child('$_userId').update({
+      'loggedIn': false
+    });
+    return true;
   }
 
 }
