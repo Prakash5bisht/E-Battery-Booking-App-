@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                'password': password,
                                'loggedIn': true
                              });
-                             Provider.of<SavedInfo>(context, listen: false).setUser(snap.value['email']);
+                             Provider.of<SavedInfo>(context, listen: false).setUser(email);
                              Navigator.push(context, MaterialPageRoute(builder: (context){
                                return MainScreen(latitude: widget.latitude, longitude: widget.longitude,);
                              }));
@@ -111,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return SignUpScreen();
+                          return SignUpScreen(uID: widget.uID, latitude: widget.latitude, longitude: widget.longitude,);
                         },
                       ),
                     );

@@ -39,6 +39,7 @@ class _LocationFetchingScreenState extends State<LocationFetchingScreen> {
     String platformImei;
     try{
       platformImei = await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
+      Provider.of<SavedInfo>(context,listen: false).setUserId(platformImei);
 
       Map<dynamic,dynamic> userSnapshot;
       FirebaseDatabase.instance.reference().child('user').once().then((DataSnapshot snapshot){

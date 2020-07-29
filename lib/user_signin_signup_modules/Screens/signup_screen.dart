@@ -74,16 +74,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     print(userSnapshot);
                     if(userSnapshot != null){
                       if(userSnapshot.containsKey(widget.uID)){
-                        showAlert(context, 'your device is already registered');
+                        showAlert(context, 'This device is already registered');
                       }
                       else{
-                        if(email != null && password != null){
+                        if((email != null && email != '') && (password != null && password != '')){
                           databaseReference.child('user').child('${widget.uID}').set({
                             'email': email,
                             'password': password,
-                            'loggedIn': false,
+                            'loggedIn': true,
                           });
-                          Provider.of<SavedInfo>(context, listen: false).setUser(snap.value['email']);
+                          Provider.of<SavedInfo>(context, listen: false).setUser(email);
                           Navigator.push(context, MaterialPageRoute(builder: (context){
                             return MainScreen(latitude: widget.latitude, longitude: widget.longitude,);
                           }));
@@ -94,12 +94,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       }
                     }else{
-                      if(email != null && password != null){
+                      if((email != null && email != '') && (password != null && password != '')){
                         databaseReference.child('user').child('${widget.uID}').set({
                           'email': email,
                           'password': password,
                           'loggedIn': true,
                         });
+                        Provider.of<SavedInfo>(context, listen: false).setUser(email);
                         Navigator.push(context, MaterialPageRoute(builder: (context){
                           return MainScreen(latitude: widget.latitude, longitude: widget.longitude,);
                         }));
@@ -119,7 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return LoginScreen();
+                          return LoginScreen(uID: widget.uID, latitude: widget.latitude, longitude: widget.longitude,);
                         },
                       ),
                     );
