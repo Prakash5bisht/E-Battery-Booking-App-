@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sihproject/location_fetching_screen.dart';
 import 'package:sihproject/models/saved_info.dart';
@@ -7,7 +8,9 @@ import 'package:sihproject/models/saved_info.dart';
 void main() {
   ///a familiar function from where execution starts
   ///this calls a function (runApp) which calls the MyApp class constructor
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value) => runApp(MyApp()));
+
 }
 
 class MyApp extends StatelessWidget {
