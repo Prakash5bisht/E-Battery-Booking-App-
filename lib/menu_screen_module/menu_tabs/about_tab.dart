@@ -19,14 +19,16 @@ class AboutTab extends StatelessWidget {
                    children: <Widget>[
                      Row(
                        children: <Widget>[
-                         SvgPicture.asset(
-                           'images/bicycle.svg',
-                           height: size.height * 0.15,
-                           color: Colors.green,
+                         Flexible(
+                           child: SvgPicture.asset(
+                             'images/bicycle.svg',
+                             height: size.height * 0.15,
+                             color: Colors.green,
+                           ),
                          ),
                          SizedBox(width: 10.0,),
                          Text(
-                           'e-Parivahan',
+                           'E-Parivahan',
                            style: TextStyle(
                              color: Colors.white,
                              fontWeight: FontWeight.w500,
@@ -67,7 +69,6 @@ class AboutTab extends StatelessWidget {
                             color: Colors.grey,
                             fontSize: 15.0,
                             fontWeight: FontWeight.w400,
-                            fontFamily: 'Rowdies'
                         ),
                       ),
                     ),
