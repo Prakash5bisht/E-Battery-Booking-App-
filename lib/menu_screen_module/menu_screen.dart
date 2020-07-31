@@ -5,6 +5,7 @@ import 'package:sihproject/location_fetching_screen.dart';
 import 'package:sihproject/main.dart';
 import 'package:sihproject/menu_screen_module//reusable_list_tile.dart';
 import 'package:sihproject/menu_screen_module/menu_tabs/about_tab.dart';
+import 'package:sihproject/menu_screen_module/menu_tabs/feedback_tab.dart';
 import 'package:sihproject/models/saved_info.dart';
 
 /// this screen is shown when the menu button in main_screen is pressed
@@ -65,7 +66,7 @@ class MenuScreen extends StatelessWidget {
                     iconColor: Colors.blue,
                     title: 'Feedback',
                     onPressed: () {
-                      print('feedback');
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> FeedbackTab()));
                     },
                   ),
                   ReusableListTile(
@@ -88,7 +89,7 @@ class MenuScreen extends StatelessWidget {
                     iconColor: Colors.deepOrangeAccent,
                     title: 'About Us',
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) =>AboutTab()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => AboutTab()));
                     },
                   ),
                 ],

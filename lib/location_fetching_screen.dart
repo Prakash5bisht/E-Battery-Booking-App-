@@ -51,6 +51,7 @@ class _LocationFetchingScreenState extends State<LocationFetchingScreen> {
               if(snap.value['loggedIn'] == true){
                 setState(() {
                   Provider.of<SavedInfo>(context, listen: false).setUser(snap.value['email']);
+                  Provider.of<SavedInfo>(context, listen: false).setPassword(snap.value['password']);
                   Navigator.push(context, MaterialPageRoute(builder: (context){
                     return MainScreen(latitude: lat, longitude: long,);
                   }));

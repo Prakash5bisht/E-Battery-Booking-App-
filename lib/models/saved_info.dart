@@ -12,6 +12,7 @@ class SavedInfo extends ChangeNotifier{
   double longitude;
   String _userName;
   String _userId;
+  String _password;
 
   void getBitmap(){
     /// this function calls convertPngToBitmap function and then store it to customMarker variable
@@ -34,6 +35,14 @@ class SavedInfo extends ChangeNotifier{
 
   void setUser(String email){
      _userName = email;
+  }
+
+  String getPassword(){
+    return _password;
+  }
+
+  void setPassword(String password){
+    _password = password;
   }
 
   void setUserId(String id){
