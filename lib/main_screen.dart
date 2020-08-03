@@ -26,10 +26,11 @@ class _MainScreenState extends State<MainScreen> {
   double myLat;
   double myLong;
   List<Marker> markers = [];
-  List<LatLng> coordinates = [];
-//  Set<Polyline> polylines = {};
- // var location;
-//  PolylinePoints polylinePoints = PolylinePoints();
+  List<LatLng> coordinates = [LatLng(26.9091555, 80.9757951),LatLng(26.8103905, 80.8751125),LatLng(28.9551047,77.7373878), LatLng(28.6915512, 77.1713917)];
+  Set<Polyline>_polylines = {};
+  LatLng _new = LatLng(26.9091555, 80.9757951);
+  LatLng _news = LatLng(26.8103905, 80.8751125);
+
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _MainScreenState extends State<MainScreen> {
     setLocation();
     /// ths calls the getBitmap function of SavedInfo class
     addMarkers();
-   // addPolylines();
+
   }
 
   Completer<GoogleMapController> _controller = Completer();
@@ -61,31 +62,10 @@ class _MainScreenState extends State<MainScreen> {
     zoom: 19.0,
   );
 
-//  void addPolylines() async {
-//    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-//        apiKey,
-//        PointLatLng(myLat, myLong),
-//        PointLatLng(26.8103905, 80.8751125),
-//        travelMode: TravelMode.driving);
-//
-//    if(result.points.isNotEmpty){
-//      result.points.forEach((PointLatLng point){
-//        coordinates.add(LatLng(point.latitude, point.longitude));
-//      }
-//      );
-//    }
-//
-//    setState(() {
-//      polylines.add(
-//        Polyline(
-//          polylineId: PolylineId('route'),
-//          color: Colors.green,
-//          points: coordinates,
-//          visible: true
-//        )
-//      );
-//    });
-//  }
+  void addPolylines() async {
+
+
+  }
 
   /// this function adds markers to the map
   void addMarkers() {
@@ -121,12 +101,19 @@ class _MainScreenState extends State<MainScreen> {
                           .reference()
                           .child('modules')
                           .child(element.key),
-                      context: context);
+                      context: context, latitude: widget.latitude, longitude: widget.longitude);
                 }));
           });
         } catch (e) {
           print(e);
         }
+
+        _polylines.add(Polyline(
+          polylineId: PolylineId('1'),
+          visible: true,
+          points: coordinates,
+          color: Colors.blue
+        ));
       });
 
     });
@@ -160,7 +147,7 @@ class _MainScreenState extends State<MainScreen> {
               zoomControlsEnabled: false,
               mapToolbarEnabled: false,
               markers: Set.from(markers), /// this lays down the markers from the list of markers after converting list to set
-          //    polylines: polylines,
+            //  polylines: _polylines,
             ),
             /// on top of google map a menu button is laid
             Padding(

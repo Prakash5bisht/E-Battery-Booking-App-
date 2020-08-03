@@ -6,7 +6,9 @@ import 'package:sihproject/main.dart';
 import 'package:sihproject/menu_screen_module//reusable_list_tile.dart';
 import 'package:sihproject/menu_screen_module/menu_tabs/about_tab.dart';
 import 'package:sihproject/menu_screen_module/menu_tabs/feedback_tab.dart';
+import 'package:sihproject/menu_screen_module/menu_tabs/profile_tab.dart';
 import 'package:sihproject/models/saved_info.dart';
+import 'package:sihproject/subscription_screen.dart';
 
 /// this screen is shown when the menu button in main_screen is pressed
 class MenuScreen extends StatelessWidget {
@@ -34,7 +36,10 @@ class MenuScreen extends StatelessWidget {
                       ),
                       Text(
                         Provider.of<SavedInfo>(context, listen: false)
-                            .getUser(),
+                            .getDisplayName() == null || Provider.of<SavedInfo>(context, listen: false)
+                            .getDisplayName() == '' ? Provider.of<SavedInfo>(context, listen: false)
+                            .getUser() : Provider.of<SavedInfo>(context, listen: false)
+                            .getDisplayName(),
                         style: TextStyle(
                           color: Color(0xff404040),
                           fontWeight: FontWeight.w500,
@@ -58,7 +63,8 @@ class MenuScreen extends StatelessWidget {
                     iconColor: Colors.green,
                     title: 'Profile',
                     onPressed: () {
-                      print('profile');
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> ProfileTab()));
                     },
                   ),
                   ReusableListTile(
@@ -66,6 +72,7 @@ class MenuScreen extends StatelessWidget {
                     iconColor: Colors.blue,
                     title: 'Feedback',
                     onPressed: () {
+                      Navigator.pop(context);
                       Navigator.push(context, MaterialPageRoute(builder: (context)=> FeedbackTab()));
                     },
                   ),
@@ -74,14 +81,17 @@ class MenuScreen extends StatelessWidget {
                     iconColor: Colors.grey,
                     title: 'Log Out',
                     onPressed: () {
-                      Provider.of<SavedInfo>(context, listen: false)
-                              .signOutUser()
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      MyApp()))
-                          : print('not done');
+                      if(Provider.of<SavedInfo>(context, listen: false)
+                          .signOutUser()){
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    MyApp()));
+                      }
+
                     },
                   ),
                   ReusableListTile(
@@ -89,6 +99,7 @@ class MenuScreen extends StatelessWidget {
                     iconColor: Colors.deepOrangeAccent,
                     title: 'About Us',
                     onPressed: () {
+                      Navigator.pop(context);
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AboutTab()));
                     },
                   ),

@@ -65,7 +65,6 @@ class FeedbackTab extends StatelessWidget {
                   child: Container(
                     margin:
                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 3.0),
-                    // height: maxLines * 24.0,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -126,7 +125,7 @@ class FeedbackTab extends StatelessWidget {
                   color: Color(0xff3366ff),
                   onPressed: () {
                      if (controller.text == null || controller.text == '') {
-                      showAlert(context, 'Tell us your query please');
+                      showAlert(context, 'Tell us your querry please');
                     }else{
                        sendFeedback(context);
                        controller.clear();
@@ -140,19 +139,22 @@ class FeedbackTab extends StatelessWidget {
   }
 
   void sendFeedback(BuildContext context) async{
-    String userName = Provider.of<SavedInfo>(context, listen: false).getUser();
-    String password =  Provider.of<SavedInfo>(context, listen: false).getPassword();
+    String userName = 'mailfordevelopment101@gmail.com';//Provider.of<SavedInfo>(context, listen: false).getUser();
+    String password = 'sh@m1n@m1n@'; //Provider.of<SavedInfo>(context, listen: false).getPassword();
 
     final smtpServer = gmail(userName, password);
 
-    final feedback = Message()..from = Address(userName)..recipients.add('mailfordevelopment101@gmail.com')..text = controller.text;
+    final feedback = Message()..from = Address(userName)..recipients.add('singhbprakash505@gmail.com')..text = controller.text;
 
     try{
       final sendReport = await send(feedback,smtpServer);
       print('send report: ${sendReport.toString()}');
-    }catch(e){
-      print(e);
-      showAlert(context, 'an error encountered' );
+      if(sendReport.toString() == 'send report: Message successfully sent.' ){
+        showAlert(context, 'feedback sent');
+      }
+    } catch(e){
+        print(e);
+        showAlert(context, 'An error encountered');
     }
   }
 

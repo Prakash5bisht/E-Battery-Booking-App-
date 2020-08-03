@@ -12,6 +12,7 @@ import 'package:sihproject/user_signin_signup_modules/Screens/login_screen.dart'
 
 String email;
 String password;
+String phone;
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({this.uID, this.latitude, this.longitude});
   final String uID;
@@ -63,6 +64,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     email = value;
                   },
                 ),
+                RoundedInputField(
+                  hintText: "Phone Number",
+                  onChanged: (value){
+                    phone = value;
+                  },
+                ),
                 RoundedPasswordField(
                   onChanged: (value) {
                     password = value;
@@ -77,10 +84,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         showAlert(context, 'This device is already registered');
                       }
                       else{
-                        if((email != null && email != '') && (password != null && password != '')){
+                        if((email != null && email != '' && phone != null) && (password != null && password != '' && phone != null)){
                           databaseReference.child('user').child('${widget.uID}').set({
                             'email': email,
                             'password': password,
+                            'phone': phone,
+                            'displayname' : '',
+                            'profilePhoto': '',
                             'loggedIn': true,
                           });
                           Provider.of<SavedInfo>(context, listen: false).setUser(email);
@@ -89,15 +99,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }));
                         }
                        else{
-                         showAlert(context, 'email and password field must not be empty');
+                         showAlert(context, 'none of the above fields should be empty');
                         }
 
                       }
                     }else{
-                      if((email != null && email != '') && (password != null && password != '')){
+                      if((email != null && email != '') && (password != null && password != '') && (phone != null && phone != '')){
                         databaseReference.child('user').child('${widget.uID}').set({
                           'email': email,
                           'password': password,
+                          'phone': phone,
+                          'displayname' : '',
+                          'profilePhoto': '',
                           'loggedIn': true,
                         });
                         Provider.of<SavedInfo>(context, listen: false).setUser(email);
@@ -106,7 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }));
                       }
                       else{
-                        showAlert(context, 'email and password field must not be empty');
+                        showAlert(context, 'none of the above fields should be empty');
                       }
                     }
                     },

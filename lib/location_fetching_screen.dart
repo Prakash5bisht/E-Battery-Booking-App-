@@ -6,6 +6,7 @@ import 'package:imei_plugin/imei_plugin.dart';
 import 'package:provider/provider.dart';
 import 'package:sihproject/main_screen.dart';
 import 'package:sihproject/models/saved_info.dart';
+import 'package:sihproject/subscription_screen.dart';
 
 import 'main_screen.dart';
 import 'user_signin_signup_modules/Screens/welcome_screen.dart';

@@ -62,9 +62,9 @@ class AboutTab extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       child: Text(
-                        'e-Parivahan is your e-battery renting friend.This is a "pay-as-you-go" application.'
+                        'E-Parivahan is your e-battery renting friend.This is a "pay-as-you-go" application.'
                             'To do so you first need to register yourself and then open the app and you will see our swapping stations.'
-                            'This app gives you realtime status of each battery.Just find the station closest to your location, rent it on one-tap,and you are good to go.',
+                            'This app gives you realtime status of each battery.Just find the station closest to your location, rent it on one-tap and you are good to go.',
                         style: TextStyle(
                             color: Colors.grey,
                             fontSize: 15.0,

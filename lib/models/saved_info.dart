@@ -13,6 +13,9 @@ class SavedInfo extends ChangeNotifier{
   String _userName;
   String _userId;
   String _password;
+  String _diaplayName;
+  var _profilePhotoUrl;
+  String _oldPass;
 
   void getBitmap(){
     /// this function calls convertPngToBitmap function and then store it to customMarker variable
@@ -49,11 +52,61 @@ class SavedInfo extends ChangeNotifier{
     _userId = id;
   }
 
+  void setDisplayName(String myName){
+    FirebaseDatabase.instance.reference().child('user').child('$_userId').update({
+      'displayname': myName,
+    });
+    print(myName);
+    _diaplayName = myName;
+  }
+
+  String getDisplayName(){
+    FirebaseDatabase.instance.reference().child('user').child('$_userId').once().then((DataSnapshot snap){
+      _diaplayName = snap.value['displayname'];
+    });
+
+    return _diaplayName;
+  }
+
+  void setPhotoUrl(var url){
+    FirebaseDatabase.instance.reference().child('user').child('$_userId').update({
+      'profilePhoto': url,
+    });
+    _profilePhotoUrl = url;
+  }
+
+  String getPhotoUrl(){
+    FirebaseDatabase.instance.reference().child('user').child('$_userId').once().then((DataSnapshot snap){
+      _profilePhotoUrl = snap.value['profilePhoto'];
+    });
+    return _profilePhotoUrl;
+  }
+
   bool signOutUser(){
     FirebaseDatabase.instance.reference().child('user').child('$_userId').update({
       'loggedIn': false
     });
     return true;
+  }
+
+  void resetMyEmail(String newEmail){
+    FirebaseDatabase.instance.reference().child('user').child('$_userId').update({
+      'email': newEmail
+    });
+    _userName = newEmail;
+  }
+
+  void resetMyPassword(String newPassword){
+    FirebaseDatabase.instance.reference().child('user').child('$_userId').update({
+    'password': newPassword
+    });
+  }
+
+  String getOldPassword(){
+    FirebaseDatabase.instance.reference().child('user').child('$_userId').once().then((DataSnapshot snap){
+       _oldPass = snap.value['password'];
+    });
+    return _oldPass;
   }
 
 }

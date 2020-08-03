@@ -3,13 +3,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:sihproject/models/saved_info.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:sihproject/subscription_screen.dart';
 
 import '../info_screen.dart';
 import '../renting_screen.dart';
 
 /// this is screen which is shown when the user taps on marker
 class CustomBottomSheet{
-  void myBottomSheet({var reference, BuildContext context}) {
+  void myBottomSheet({var reference, BuildContext context, double latitude, double longitude}) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -59,7 +60,7 @@ class CustomBottomSheet{
                   height: 4.0,
                 ),
                 Provider.of<SavedInfo>(context, listen: false).savedBatteryPercentage == null || /// this adds a condition and notifies every listener
-                    Provider.of<SavedInfo>(context, listen: false).savedBatteryPercentage < 20   /// under which if the battery percentage is less than 20 then an empty container is shown
+                    Provider.of<SavedInfo>(context, listen: false).savedBatteryPercentage < 60   /// under which if the battery percentage is less than 20 then an empty container is shown
                     ? Container()
                     : Expanded(
                   child: MaterialButton(  /// else the rent button is shown
@@ -75,7 +76,7 @@ class CustomBottomSheet{
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RentingScreen()));
+                              builder: (context) => SubscriptionScreen(lat: latitude, long: longitude,)));
                     },
                   ),
                 ),
