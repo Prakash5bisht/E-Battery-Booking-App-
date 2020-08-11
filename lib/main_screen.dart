@@ -153,7 +153,7 @@ class _MainScreenState extends State<MainScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 10.0),
               child: MaterialButton(
-                  padding: EdgeInsets.only(top: 1.0, left: 0.8),
+                  padding: EdgeInsets.only(top: 1.0, left: 0.8),   
                   height: 40.0,
                   minWidth: 40.0,
                   shape: RoundedRectangleBorder(
